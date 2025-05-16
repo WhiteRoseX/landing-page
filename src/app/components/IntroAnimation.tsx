@@ -161,17 +161,6 @@ export default function IntroAnimation() {
           ))}
         </div>
       </motion.div>
-      
-      {/* Flèche de défilement */}
-      <div 
-        ref={scrollArrowRef}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center cursor-pointer"
-        style={{ animation: 'bounce 2s infinite ease-in-out' }}
-        onClick={scrollToNextSection}
-      >
-        <p className="text-foreground/70 mb-2 text-sm">Défiler pour découvrir</p>
-        <ChevronDownIcon className="w-6 h-6 text-primary animate-bounce" />
-      </div>
     </div>
   )
 } 
