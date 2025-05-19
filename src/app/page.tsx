@@ -88,12 +88,12 @@ const translations = {
     scientistName: "— Dr. Sarah Roberts, Neuroscientifique",
     betaFeedback: "Retours de nos bêta-testeurs",
     honestOpinions: "Des avis honnêtes de personnes qui ont testé la version bêta",
-    medStudent: "Étudiante en médecine",
+    medStudent: "Julia",
     weeks: "semaines",
     month: "mois",
     testimonial1: "\"On m'a présenté l'application pendant ma période d'examen. Au lieu de regarder Insta pendant mes pauses de révisions, je faisais les mini-jeux et ça me permettait de souffler sans trop perturber mon cerveau. Les jeux sont vraiment cool et intuitifs. Pour une première version, c'est impressionnant.\"",
     testimonial2: "\"L'application a un bon potentiel. Les designs sont modernes et agréables à utiliser. Après l'avoir utilisée de temps en temps et pendant mes pauses, je me sentais stimulé positivement. Comme toute app, elle peut s'améliorer avec le temps, mais pour une première version c'est solide et en plus c'est gratuit.\"",
-    computerSpecialist: "Informaticien, 38 ans",
+    computerSpecialist: "Informaticien",
     transformCreativity: "Transformez votre créativité avec",
     beAmongFirst: "Soyez parmi les premiers à essayer Neural Booster !",
     emailPlaceholder: "Votre adresse email",
@@ -114,7 +114,8 @@ const translations = {
     week: "S",
     score: "Score cognitif",
     basedOn: "*Basé sur une étude de 2023 avec 5 min d'entraînement quotidien",
-    scrollToDiscover: "Défiler pour découvrir"
+    scrollToDiscover: "Défiler pour découvrir",
+    earlyAccessBonus: "Accès anticipé à un mini-jeu exclusif"
   },
   en: {
     boostBrain: "Boost your brain in 5 min per day",
@@ -158,7 +159,8 @@ const translations = {
     week: "W",
     score: "Cognitive score",
     basedOn: "*Based on a 2023 study with 5 min of daily training",
-    scrollToDiscover: "Scroll to discover"
+    scrollToDiscover: "Scroll to discover",
+    earlyAccessBonus: "Early access to an exclusive mini-game"
   }
 };
 
@@ -390,14 +392,19 @@ export default function Home() {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-      if (!containerRef.current) return;
-      
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-          const sections = [section1Ref, section2Ref, section3Ref];
+          if (!containerRef.current) return;
+          
+          const scrollPosition = window.scrollY + window.innerHeight / 2;
+          const sections = [
+            { ref: section1Ref.current, id: 'section-1' },
+            { ref: section2Ref.current, id: 'section-2' },
+            { ref: document.getElementById('section-studies'), id: 'section-studies' },
+            { ref: section3Ref.current, id: 'section-3' }
+          ];
           
           // Déterminer quelle section est active en fonction de la position de défilement
           for (let i = 0; i < sections.length; i++) {
-            const section = sections[i].current;
+            const section = sections[i].ref;
             if (section) {
               const sectionTop = section.offsetTop;
               const sectionBottom = sectionTop + section.offsetHeight;
@@ -406,7 +413,7 @@ export default function Home() {
                 setActiveSection(i);
                 break;
               } else if (i === sections.length - 1 && scrollPosition >= sectionBottom) {
-                setActiveSection(i + 1);
+                setActiveSection(i);
               }
             }
           }
@@ -427,14 +434,21 @@ export default function Home() {
   
   // Navigation entre sections
   const scrollToSection = useCallback((index: number) => {
-    const sections = [section1Ref, section2Ref, section3Ref];
-    if (sections[index]?.current) {
+    const sections = [
+      { ref: section1Ref.current, id: 'section-1' },
+      { ref: section2Ref.current, id: 'section-2' },
+      { ref: document.getElementById('section-studies'), id: 'section-studies' },
+      { ref: section3Ref.current, id: 'section-3' }
+    ];
+    
+    const section = sections[index];
+    if (section?.ref) {
       window.scrollTo({
-        top: sections[index].current!.offsetTop,
+        top: section.ref.offsetTop,
         behavior: 'smooth'
       });
     }
-  }, []);
+  }, [section1Ref, section2Ref, section3Ref]);
   
   // Fonction pour faire défiler jusqu'à la section suivante
   const scrollToNextSection = useCallback(() => {
@@ -730,13 +744,13 @@ export default function Home() {
                 ))}
               </motion.div>
               
-              <h2 className="text-xl md:text-4xl font-bold bg-primary text-white px-6 py-4 rounded-lg inline-block mb-4 relative z-10 shadow-[0_0_10px_rgba(67,97,238,0.5)]">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-primary text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg inline-block mb-4 relative z-10 shadow-[0_0_10px_rgba(67,97,238,0.5)]">
                 {t.boostBrain}
               </h2>
+              <p className="text-base sm:text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
+                {t.miniGames}
+              </p>
             </div>
-            <p className="text-xl md:text-xl text-foreground/80 max-w-3xl mx-auto">
-              {t.miniGames}
-            </p>
           </motion.div>
           
           {/* Écrans de l'application */}
@@ -1071,7 +1085,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <h2 className="text-xl md:text-4xl font-bold px-6 py-4 mb-4 text-foreground relative">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold px-4 sm:px-6 py-3 sm:py-4 mb-4 text-foreground relative">
               <span className="relative">
                 {t.scienceBehind}
                 <motion.span 
@@ -1103,7 +1117,7 @@ export default function Home() {
                 />
               </span>
             </h2>
-            <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
               {t.studiesProve}
             </p>
           </motion.div>
@@ -1279,7 +1293,7 @@ export default function Home() {
               viewport={{ once: true, margin: "-50px" }}
             >
               <motion.h3 
-                className="text-2xl font-bold mb-6 text-primary relative"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold px-4 sm:px-6 py-3 sm:py-4 mb-4 text-foreground relative"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -1301,7 +1315,7 @@ export default function Home() {
                       color: "#4361ee",
                       transition: { duration: 0.2 }
                     }}
-                  >{t.journalName}</motion.span> ({t.studyYear}
+                  >{t.journalName}</motion.span> {t.studyYear}
                 </motion.p>
                 <ul className="space-y-4">
                   {[
@@ -1388,7 +1402,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <h2 className="text-xl md:text-4xl font-bold px-6 py-4 mb-4 text-foreground relative">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold px-4 sm:px-6 py-3 sm:py-4 mb-4 text-foreground relative">
               <span className="relative">
                 {t.betaFeedback}
                 <motion.span 
@@ -1404,7 +1418,7 @@ export default function Home() {
                 />
               </span>
             </h2>
-            <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
               {t.honestOpinions}
             </p>
           </motion.div>
@@ -1440,8 +1454,8 @@ export default function Home() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold">{t.medStudent}</h3>
-                    <p className="text-foreground/60 text-sm">{language === "fr" ? `Il y a 3 ${t.weeks}` : `3 ${t.weeks} ago`}</p>
+                    <h3 className="text-lg sm:text-xl font-semibold">{t.medStudent}</h3>
+                    <p className="text-foreground/60 text-sm">{language === "fr" ? "Étudiante en médecine" : "Medical student"}</p>
                   </div>
                 </div>
                 
@@ -1492,7 +1506,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold">Marc D.</h3>
+                    <h3 className="text-lg sm:text-xl font-semibold">Marc </h3>
                     <p className="text-foreground/60 text-sm">{t.computerSpecialist}</p>
                   </div>
                 </div>
@@ -1549,18 +1563,30 @@ export default function Home() {
             <div className="absolute -bottom-16 -left-16 w-32 h-32 rounded-full bg-secondary/10"></div>
             
             <div className="relative">
-              <h3 className="text-2xl font-bold mb-6 text-foreground text-center">
+              <h3 className="text-xl sm:text-2xl font-bold mb-6 text-foreground text-center">
                 {t.transformCreativity} <span className="text-primary">Neural Booster</span>
               </h3>
               
               <motion.form 
-                className="bg-primary/5 p-8 rounded-xl mb-12 max-w-2xl mx-auto relative overflow-hidden"
+                className="bg-primary/5 p-8 rounded-xl mb-12 max-w-2xl mx-auto relative overflow-hidden neon-gaming-form"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true, margin: '-100px' }}
                 onSubmit={handleSubmitEmail}
               >
+                {/* Accroche bonus */}
+                <motion.div 
+                  className="flex items-center justify-center mb-4"
+                  initial={{ opacity: 0, y: -10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <span className="text-primary font-semibold text-base sm:text-lg flex items-center gap-2 bg-white/80 px-3 py-1 rounded-full shadow-sm border border-primary/20">
+                    <span role="img" aria-label="cadeau">🎁</span> {t.earlyAccessBonus}
+                  </span>
+                </motion.div>
                 <p className="text-center text-foreground font-medium mb-6 text-lg">
                   {t.beAmongFirst}
                 </p>
@@ -1608,11 +1634,23 @@ export default function Home() {
                   </motion.div>
                   <motion.button 
                     type="submit"
-                    className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition-colors font-medium whitespace-nowrap disabled:opacity-70"
+                    className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition-colors font-medium whitespace-nowrap disabled:opacity-70 cursor-pointer"
                     disabled={isSubmitting}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    animate={{
+                      y: [0, -8, 0, -4, 0],
+                    }}
+                    transition={{
+                      y: {
+                        duration: 1.2,
+                        repeat: Infinity,
+                        repeatType: "loop"
+                      },
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 10
+                    }}
                   >
                     {isSubmitting ? (
                       <div className="flex items-center justify-center">
@@ -1768,12 +1806,23 @@ export default function Home() {
         transition={{ duration: 0.5, delay: 1 }}
         whileHover={{ opacity: 1 }}
       >
-        {[0, 1, 2, 3].map(index => (
-          <button
-            key={index}
-            className={`w-3 h-3 rounded-full transition-all ${activeSection === index ? 'bg-primary scale-125' : 'bg-primary/40'}`}
+        {[
+          { id: 'section-1', label: 'Intro' },
+          { id: 'section-2', label: 'Graphiques' },
+          { id: 'section-studies', label: 'Études' },
+          { id: 'section-3', label: 'Formulaire' }
+        ].map((section, index) => (
+          <motion.button
+            key={section.id}
+            className={`w-3 h-3 rounded-full transition-all relative group ${activeSection === index ? 'bg-primary scale-125' : 'bg-primary/40'}`}
             onClick={() => scrollToSection(index)}
-          />
+            whileHover={{ scale: 1.2 }}
+            title={section.label}
+          >
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 bg-white px-2 py-1 rounded text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              {section.label}
+            </span>
+          </motion.button>
         ))}
       </motion.div>
     </div>
